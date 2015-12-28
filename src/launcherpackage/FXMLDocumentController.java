@@ -224,18 +224,43 @@ public class FXMLDocumentController implements Initializable {
 
     
     public void launchminecraftyo(){
-            
+        int WhatDoIReturn = -1;
         
-        ExecutorService executor = Executors.newCachedThreadPool();
-        executor.submit(() -> {
-            //test3(); //download latest (IF NO VERSION GIVEN..)
-            //test4(); //installing...
-            DownloadMineCraft();
-            RunMineCraft();  //run minecraft
-            return null;
-        });
-        executor.shutdown();
+        WhatDoIReturn = BeforeDownload();
+        if (WhatDoIReturn == 1){
+            ExecutorService executor = Executors.newCachedThreadPool();
+            executor.submit(() -> {
+                //test3(); //download latest (IF NO VERSION GIVEN..)
+                //test4(); //installing...
 
+                DownloadMineCraft();
+                RunMineCraft();  //run minecraft
+
+                return null;
+            });
+            executor.shutdown();
+
+        } else if (WhatDoIReturn == 0){
+            ExecutorService executor = Executors.newCachedThreadPool();
+            executor.submit(() -> {
+                //test3(); //download latest (IF NO VERSION GIVEN..)
+                //test4(); //installing...
+                RunMineCraft();  //run minecraft
+
+                return null;
+            });
+            executor.shutdown();
+
+        } else if (WhatDoIReturn == -1){
+            //something went wong...
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("TagCraftMC API");
+            alert.setHeaderText("Version not installed!");
+            alert.setContentText("Seems like the version is not installed using our new system. The Launcher will now install it for you..");
+
+            alert.showAndWait();
+        }
+        
         
     }
 
@@ -274,10 +299,16 @@ public class FXMLDocumentController implements Initializable {
         } else {
             //make directory.. no need to check for file bc file wont be available...
             new File(myDir).mkdir();
-            
+            //if directory made.. show message.. and star downloading..
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("TagCraftMC API");
+            alert.setHeaderText("Version not installed!");
+            alert.setContentText("Seems like the version is not installed using our new system. The Launcher will now install it for you..");
+
+            alert.showAndWait();
+            return 1;
         }
         
-        return -1;
     }
     
     public void DownloadMineCraft() {
