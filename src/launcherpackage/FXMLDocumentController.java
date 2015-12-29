@@ -7,7 +7,10 @@ package launcherpackage;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +20,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -234,6 +239,7 @@ public class FXMLDocumentController implements Initializable {
                 //test4(); //installing...
 
                 DownloadMineCraft();
+                MakeFile();
                 RunMineCraft();  //run minecraft
 
                 return null;
@@ -308,6 +314,27 @@ public class FXMLDocumentController implements Initializable {
             alert.showAndWait();
             return 1;
         }
+        
+    }
+    
+    public void MakeFile() {
+        File workingDirectory = Platform.getCurrentPlatform().getWorkingDirectory();
+        System.out.print(workingDirectory);
+        String myDir = workingDirectory.toString() + "/TagCraftMC_Files/" + (String) cmbox.getValue();
+        
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(myDir, "UTF-8");
+            writer.println("File Downloaded");
+            writer.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            writer.close();
+        }
+
         
     }
     
