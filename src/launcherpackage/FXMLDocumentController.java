@@ -7,8 +7,13 @@ package launcherpackage;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -17,6 +22,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -229,6 +235,7 @@ public class FXMLDocumentController implements Initializable {
 
     
     public void launchminecraftyo(){
+        savesettings();
         int WhatDoIReturn = -1;
         
         WhatDoIReturn = BeforeDownload();
@@ -385,6 +392,69 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     
+     public void savesettings(){
+            Properties prop = new Properties();
+	OutputStream output = null;
+
+	try {
+
+		output = new FileOutputStream("config.properties");
+
+		// set the properties value
+		prop.setProperty("username", txt.getText());
+		prop.setProperty("selectedversion", (String) cmbox.getValue());
+		
+		// save properties to project root folder
+		prop.store(output, null);
+
+	} catch (IOException io) {
+		io.printStackTrace();
+	} finally {
+		if (output != null) {
+			try {
+				output.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+        }
+    
+        
+        public void loadsettings(){
+            
+            Properties prop = new Properties();
+	InputStream input = null;
+
+	try {
+
+		input = new FileInputStream("config.properties");
+
+		// load a properties file
+		prop.load(input);
+
+		// get the property value and print it out
+		//System.out.println(prop.getProperty("database"));
+		//System.out.println(prop.getProperty("dbuser"));
+		//System.out.println(prop.getProperty("dbpassword"));
+
+                txt.setText(prop.getProperty("username"));
+		cmbox.setValue(prop.getProperty("selectedversion"));
+	} catch (IOException ex) {
+		ex.printStackTrace();
+	} finally {
+		if (input != null) {
+			try {
+				input.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+        }
+    
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -401,6 +471,7 @@ public class FXMLDocumentController implements Initializable {
         //listFolders(mc.getLocation().toString() + "/versions/");
         
 
+        loadsettings();
         
     }    
     
