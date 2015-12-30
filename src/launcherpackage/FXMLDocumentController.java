@@ -236,6 +236,10 @@ public class FXMLDocumentController implements Initializable {
     
     public void launchminecraftyo(){
         savesettings();
+        btn.setDisable(true);
+        txt.setDisable(true);
+        cmbox.setDisable(true);
+        
         int WhatDoIReturn = -1;
         
         WhatDoIReturn = BeforeDownload();
@@ -269,7 +273,7 @@ public class FXMLDocumentController implements Initializable {
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("TagCraftMC API");
             alert.setHeaderText("Version not installed!");
-            alert.setContentText("Seems like the version is not installed using our new system. The Launcher will now install it for you..");
+            alert.setContentText("Seems like the version is not installed using our new system.\nThe Launcher will now install it for you..");
 
             alert.showAndWait();
         }
@@ -303,7 +307,7 @@ public class FXMLDocumentController implements Initializable {
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("TagCraftMC API");
                 alert.setHeaderText("Version not installed!");
-                alert.setContentText("Seems like the version is not installed using our new system. The Launcher will now install it for you..");
+                alert.setContentText("Seems like the version is not installed using our new system.\nThe Launcher will now install it for you..");
 
                 alert.showAndWait();
                 return 1;
