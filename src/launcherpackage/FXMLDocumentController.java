@@ -17,8 +17,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +51,17 @@ import sk.tomsik68.mclauncher.impl.versions.mcdownload.MCDownloadVersionList;
  * @author ammar
  */
 public class FXMLDocumentController implements Initializable {
+
+    @FXML
+    private Button btndownload;
+    @FXML
+    private Button exitbtn;
+    @FXML
+    private TextField txt;
+    @FXML
+    private Button btn;
+    @FXML
+    private ComboBox cmbox;
     
     
     public void listFolders(String directoryName) {
@@ -72,13 +81,6 @@ public class FXMLDocumentController implements Initializable {
         
     }
     
-    
-    @FXML
-    private TextField txt;
-    @FXML
-    private Button btn;
-    @FXML
-    private ComboBox cmbox;
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -478,5 +480,15 @@ public class FXMLDocumentController implements Initializable {
         loadsettings();
         
     }    
+
+    @FXML
+    private void handledwnBtnAction(ActionEvent event) {
+            //open a new form here...
+    }
+
+    @FXML
+    private void handleextBtnAction(ActionEvent event) {
+        System.exit(0);
+    }
     
 }
