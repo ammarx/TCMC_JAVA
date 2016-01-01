@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="MCLauncher_Java.jar" size="12532" download="eager" />
+    <jar href="MCLauncher_Java.jar" size="19806" download="eager" />
     <jar href="lib/gson-2.5.jar" size="232482" download="eager" />
     <jar href="lib/json-smart-1.1.1.jar" size="51483" download="eager" />
     <jar href="lib/mclauncher-api-0.3.1.jar" size="123527" download="eager" />
@@ -16,6 +16,6 @@
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="MCLauncher_Java" >
     <param name="requiredFXVersion" value="8.0+"/>
   </applet-desc>
-  <jfx:javafx-desc  width="800" height="600" main-class="launcherpackage.Main"  name="MCLauncher_Java" />
+  <jfx:javafx-desc  width="800" height="600" main-class="MainPkg.Main"  name="MCLauncher_Java" />
   <update check="always"/>
 </jnlp>

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package launcherpackage;
+package MainPkg;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,10 +19,11 @@ public class Main extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("Main_FXMLDocument.fxml"));
         
         Scene scene = new Scene(root);
-        
+        stage.setTitle("Launcher - 4518659");
+
         stage.setScene(scene);
         stage.setResizable(false);
 

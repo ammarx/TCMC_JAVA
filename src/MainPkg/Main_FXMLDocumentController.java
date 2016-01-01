@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package launcherpackage;
+package MainPkg;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,12 +28,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import sk.tomsik68.mclauncher.api.common.ILaunchSettings;
 import sk.tomsik68.mclauncher.api.common.IObservable;
 import sk.tomsik68.mclauncher.api.common.IObserver;
@@ -50,7 +56,7 @@ import sk.tomsik68.mclauncher.impl.versions.mcdownload.MCDownloadVersionList;
  *
  * @author ammar
  */
-public class FXMLDocumentController implements Initializable {
+public class Main_FXMLDocumentController implements Initializable {
 
     @FXML
     private Button btndownload;
@@ -341,9 +347,9 @@ public class FXMLDocumentController implements Initializable {
             writer.println("File Downloaded");
             writer.close();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Main_FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Main_FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             writer.close();
         }
@@ -484,7 +490,19 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handledwnBtnAction(ActionEvent event) {
             //open a new form here...
-    }
+            try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/DownloadPkg/Download_FXMLDocument.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Download");
+            stage.setScene(new Scene(root1));  
+            stage.show();
+        
+        } catch (Exception e) {
+                System.out.println(e);
+        }
+        }
 
     @FXML
     private void handleextBtnAction(ActionEvent event) {
