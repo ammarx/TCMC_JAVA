@@ -16,11 +16,11 @@ import javafx.stage.Stage;
  * @author ammar
  */
 public class Main extends Application {
-    
+
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("Main_FXMLDocument.fxml"));
-        
+
         Scene scene = new Scene(root);
         stage.setTitle("Launcher - 4518659");
 
@@ -36,5 +36,5 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

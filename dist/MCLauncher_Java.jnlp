@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="MCLauncher_Java.jar" size="19806" download="eager" />
+    <jar href="MCLauncher_Java.jar" size="20910" download="eager" />
     <jar href="lib/gson-2.5.jar" size="232482" download="eager" />
     <jar href="lib/json-smart-1.1.1.jar" size="51483" download="eager" />
     <jar href="lib/mclauncher-api-0.3.1.jar" size="123527" download="eager" />
