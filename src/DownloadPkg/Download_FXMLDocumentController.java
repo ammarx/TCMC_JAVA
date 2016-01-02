@@ -5,7 +5,11 @@
  */
 package DownloadPkg;
 
+import MainPkg.Main_FXMLDocumentController;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +18,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -138,7 +144,10 @@ public class Download_FXMLDocumentController implements Initializable {
                 items.addAll(itemsX);
 
                 mylogs.setItems(items);
-
+                
+                //create file here...
+                MakeFile();
+                
                 return null;
             }
         }
@@ -147,6 +156,27 @@ public class Download_FXMLDocumentController implements Initializable {
 
     }
 
+    public void MakeFile() {
+        File workingDirectory = Platform.getCurrentPlatform().getWorkingDirectory();
+        System.out.print(workingDirectory);
+        String myDir = workingDirectory.toString() + "/TagCraftMC_Files/" + (String) cmbox.getValue();
+
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(myDir, "UTF-8");
+            writer.println("File Downloaded");
+            writer.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Main_FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Main_FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            writer.close();
+        }
+
+    }
+    
+    
     @FXML
     private void handleBackBtnAction(ActionEvent event) {
     }
