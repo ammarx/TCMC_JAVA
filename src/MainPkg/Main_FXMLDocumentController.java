@@ -39,6 +39,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import sk.tomsik68.mclauncher.api.common.ILaunchSettings;
 import sk.tomsik68.mclauncher.api.common.IObservable;
 import sk.tomsik68.mclauncher.api.common.IObserver;
@@ -489,6 +490,7 @@ public class Main_FXMLDocumentController implements Initializable {
             Parent root1 = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
             stage.setTitle("Download");
             stage.setScene(new Scene(root1));
             stage.show();
