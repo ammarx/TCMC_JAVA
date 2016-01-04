@@ -68,6 +68,21 @@ public class Main_FXMLDocumentController implements Initializable {
     @FXML
     private ComboBox cmbox;
 
+    public void make_server_resource_packs() {
+        //make a new folder here if it doesnt exist.
+        File workingDirectory = Platform.getCurrentPlatform().getWorkingDirectory();
+        String myDir = workingDirectory.toString() + "/server-resource-packs";
+
+        File file = new File(myDir);
+        if (!file.exists()) {
+            if (file.mkdir()) {
+                System.out.println("Directory is created!");
+            } else {
+                System.out.println("Failed to create directory!");
+            }
+        }
+    }
+
     public void listFolders(String directoryName) {
         File directory = new File(directoryName);
         //get all the files from a directory
@@ -451,6 +466,7 @@ public class Main_FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        make_server_resource_packs();
         System.out.print("TEST");
         final MinecraftInstance mc = new MinecraftInstance(new File("testmc"));
 
