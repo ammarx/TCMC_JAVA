@@ -37,6 +37,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -68,6 +71,8 @@ public class Main_FXMLDocumentController implements Initializable {
     private Button btn;
     @FXML
     private ComboBox cmbox;
+    @FXML
+    private WebView browserX;
 
     public void make_server_resource_packs() {
         //make a new folder here if it doesnt exist.
@@ -467,6 +472,11 @@ public class Main_FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        //WebView  browserX = new WebView();
+        WebEngine engine = browserX.getEngine();
+        String urlx = "http://files.tagcraftnetwork.com/launcher/minecraftnews.html";
+        engine.load(urlx);
+        
         make_server_resource_packs();
         System.out.print("TEST");
         final MinecraftInstance mc = new MinecraftInstance(new File("testmc"));
