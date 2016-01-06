@@ -70,7 +70,7 @@ public class Download_FXMLDocumentController implements Initializable {
     @FXML
     private ProgressIndicator progressing_done;
 
-    public void test1() {
+    public void GetMYdownloadList() {
 
         MCDownloadVersionList list = new MCDownloadVersionList();
         list.addObserver(new IObserver<String>() {
@@ -127,7 +127,7 @@ public class Download_FXMLDocumentController implements Initializable {
         executor.submit(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                test1(); //version list (FULL LIST)
+                GetMYdownloadList(); //version list (FULL LIST)
 
                 return null;
             }
