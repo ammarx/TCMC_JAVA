@@ -113,17 +113,63 @@ public class Main_FXMLDocumentController implements Initializable {
 
     }
 
+    public void RecreateFakeProfile() {
+        File workingDirectory = Platform.getCurrentPlatform().getWorkingDirectory();
+        String myDir = workingDirectory.toString() + "/launcher_profiles.json";
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(myDir, "UTF-8");
+            writer.println("{\n"
+                    + "  \"profiles\": {\n"
+                    + "    \"Ammar_Ahmad\": {\n"
+                    + "      \"name\": \"Ammar_Ahmad\"\n"
+                    + "    }\n"
+                    + "  },\n"
+                    + "  \"selectedProfile\": \"Ammar_Ahmad\",\n"
+                    + "  \"clientToken\": \"5cf1009c-2be7-437f-9966-9f382ac82e2c\",\n"
+                    + "  \"authenticationDatabase\": {\n"
+                    + "    \"4db1fbf430f344498dea7663e108a1d2\": {\n"
+                    + "      \"displayName\": \"Ammar_Ahmad\",\n"
+                    + "      \"userProperties\": [\n"
+                    + "        {\n"
+                    + "          \"name\": \"twitch_access_token\",\n"
+                    + "          \"value\": \"emoitqdugw2h8un7psy3uo84uwb8raq\"\n"
+                    + "        }\n"
+                    + "      ],\n"
+                    + "      \"accessToken\": \"065d7ddad492417ebf7998b029734907\",\n"
+                    + "      \"userid\": \"793addf968294e04aac2023db794f0b5\",\n"
+                    + "      \"uuid\": \"4db1fbf4-30f3-4449-8dea-7663e108a1d2\",\n"
+                    + "      \"username\": \"ammar.ahmad1993@gmail.com\"\n"
+                    + "    }\n"
+                    + "  },\n"
+                    + "  \"selectedUser\": \"4db1fbf430f344498dea7663e108a1d2\",\n"
+                    + "  \"launcherVersion\": {\n"
+                    + "    \"name\": \"1.6.44\",\n"
+                    + "    \"format\": 17\n"
+                    + "  }\n"
+                    + "}");
+            writer.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Main_FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Main_FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            writer.close();
+        }
+    }
+
     public void RunMineCraft() {
 
         try {
             // finally use my minecraft credentials
-
+            System.out.println("Generating fake profile...");
+            RecreateFakeProfile();
             System.out.println("Logging in...");
 
+            //set a false login service...
             YDLoginService service = new YDLoginService();
             service.load(Platform.getCurrentPlatform().getWorkingDirectory());
-            YDProfileIO profileIO = new YDProfileIO(Platform
-                    .getCurrentPlatform().getWorkingDirectory());
+            YDProfileIO profileIO = new YDProfileIO(Platform.getCurrentPlatform().getWorkingDirectory());
 
             IProfile[] profiles = profileIO.read();
             final ISession session = service.login(profiles[0]);
@@ -132,8 +178,7 @@ public class Main_FXMLDocumentController implements Initializable {
             session.setSessionID("NULL");
             session.setUUID("NULL");
 
-            profileIO.write(profiles);
-
+            //profileIO.write(profiles);
             System.out.println("Success! Launching...");
 
             File workingDirectory = Platform.getCurrentPlatform().getWorkingDirectory();
@@ -476,7 +521,7 @@ public class Main_FXMLDocumentController implements Initializable {
         WebEngine engine = browserX.getEngine();
         String urlx = "http://files.tagcraftnetwork.com/launcher/minecraftnews.html";
         engine.load(urlx);
-        
+
         make_server_resource_packs();
         System.out.print("TEST");
         final MinecraftInstance mc = new MinecraftInstance(new File("testmc"));

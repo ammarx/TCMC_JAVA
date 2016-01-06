@@ -12,7 +12,9 @@
         <Button fx:id="btndownload" layoutX="197.0" layoutY="69.0" mnemonicParsing="false" onAction="#handledwnBtnAction" text="Download" />
         <Button fx:id="backbtn" layoutX="25.0" layoutY="69.0" mnemonicParsing="false" onAction="#handleBackBtnAction" text="Back" />
         <Label layoutX="24.0" layoutY="115.0" text="Log:" />
-        <ListView fx:id="mylogs" layoutX="21.0" layoutY="140.0" prefHeight="204.0" prefWidth="515.0" /> 
+        <ListView fx:id="mylogs" layoutX="21.0" layoutY="140.0" prefHeight="204.0" prefWidth="515.0" />
+      <ProgressIndicator fx:id="progressing" layoutX="389.0" layoutY="29.0" prefHeight="81.0" prefWidth="107.0" visible="false" />
+      <ProgressIndicator fx:id="progressing_done" layoutX="389.0" layoutY="29.0" prefHeight="81.0" prefWidth="107.0" progress="1.0" visible="false" /> 
           
     </children>
 </AnchorPane>

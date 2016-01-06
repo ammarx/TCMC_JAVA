@@ -30,6 +30,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressIndicator;
 import sk.tomsik68.mclauncher.api.common.IObservable;
 import sk.tomsik68.mclauncher.api.common.IObserver;
 import sk.tomsik68.mclauncher.api.common.MCLauncherAPI;
@@ -37,6 +38,7 @@ import sk.tomsik68.mclauncher.api.common.mc.MinecraftInstance;
 import sk.tomsik68.mclauncher.api.versions.IVersion;
 import sk.tomsik68.mclauncher.impl.common.Platform;
 import sk.tomsik68.mclauncher.impl.versions.mcdownload.MCDownloadVersionList;
+import sk.tomsik68.mclauncher.api.ui.IProgressMonitor;
 
 /**
  *
@@ -54,6 +56,10 @@ public class Download_FXMLDocumentController implements Initializable {
     private ListView<String> mylogs;
 
     private static List strHolder = new ArrayList();
+    @FXML
+    private ProgressIndicator progressing;
+    @FXML
+    private ProgressIndicator progressing_done;
 
     public void test1() {
 
@@ -137,17 +143,23 @@ public class Download_FXMLDocumentController implements Initializable {
         executor.submit(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
+                
+                progressing_done.setVisible(false);
+                progressing.setVisible(true);
+                
                 test3(); //download latest (IF NO VERSION GIVEN..)
                 //test4(); //installing...
 
-                ObservableList<String> items = FXCollections.observableArrayList("DONE!");
+                /*ObservableList<String> items = FXCollections.observableArrayList("DONE!");
                 ObservableList<String> itemsX = FXCollections.observableArrayList(mylogs.getItems());
                 items.addAll(itemsX);
-
                 mylogs.setItems(items);
+                */
                 
                 //create file here...
                 MakeFile();
+                progressing.setVisible(false);
+                progressing_done.setVisible(true);
                 
                 return null;
             }
