@@ -6,13 +6,17 @@
 package DownloadPkg;
 
 import MainPkg.Main_FXMLDocumentController;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -31,14 +35,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressIndicator;
+import sk.tomsik68.mclauncher.api.common.ILaunchSettings;
 import sk.tomsik68.mclauncher.api.common.IObservable;
 import sk.tomsik68.mclauncher.api.common.IObserver;
 import sk.tomsik68.mclauncher.api.common.MCLauncherAPI;
 import sk.tomsik68.mclauncher.api.common.mc.MinecraftInstance;
+import sk.tomsik68.mclauncher.api.login.IProfile;
+import sk.tomsik68.mclauncher.api.login.ISession;
 import sk.tomsik68.mclauncher.api.versions.IVersion;
 import sk.tomsik68.mclauncher.impl.common.Platform;
 import sk.tomsik68.mclauncher.impl.versions.mcdownload.MCDownloadVersionList;
 import sk.tomsik68.mclauncher.api.ui.IProgressMonitor;
+import sk.tomsik68.mclauncher.impl.login.yggdrasil.YDLoginService;
+import sk.tomsik68.mclauncher.impl.login.yggdrasil.YDProfileIO;
 
 /**
  *
@@ -147,7 +156,8 @@ public class Download_FXMLDocumentController implements Initializable {
                 progressing_done.setVisible(false);
                 progressing.setVisible(true);
                 
-                test3(); //download latest (IF NO VERSION GIVEN..)
+                startzDownload(); //download latest (IF NO VERSION GIVEN..)
+                CreateRES_RunMineCraft(); //this should fix the issue with files 
                 //test4(); //installing...
 
                 /*ObservableList<String> items = FXCollections.observableArrayList("DONE!");
@@ -169,6 +179,135 @@ public class Download_FXMLDocumentController implements Initializable {
 
     }
 
+    
+    
+    
+    public void CreateRES_RunMineCraft() {
+
+        try {
+            // finally use my minecraft credentials
+            System.out.println("Logging in...");
+
+            //set a false login service...
+            YDLoginService service = new YDLoginService();
+            service.load(Platform.getCurrentPlatform().getWorkingDirectory());
+            YDProfileIO profileIO = new YDProfileIO(Platform.getCurrentPlatform().getWorkingDirectory());
+
+            IProfile[] profiles = profileIO.read();
+            final ISession session = service.login(profiles[0]);
+
+            session.setUsername("NULL");
+            session.setSessionID("NULL");
+            session.setUUID("NULL");
+
+            //profileIO.write(profiles);
+            System.out.println("Success! Launching...");
+
+            File workingDirectory = Platform.getCurrentPlatform().getWorkingDirectory();
+            System.out.print(workingDirectory);
+
+            //final MinecraftInstance mc = new MinecraftInstance(new File("testmc"));
+            final MinecraftInstance mc = new MinecraftInstance(new File(workingDirectory.toString()));
+
+            final MCDownloadVersionList versionList = new MCDownloadVersionList();
+            versionList.addObserver(new IObserver<String>() {
+
+                private boolean launched = false;
+
+                @Override
+                public void onUpdate(IObservable<String> observable,
+                        String id) {
+                    id = (String) cmbox.getValue();
+                    IVersion changed = null;
+                    try {
+                        changed = versionList.retrieveVersionInfo(id);
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                    }
+                    if (!launched) {
+                        launched = true;
+                        try {
+                            List<String> launchCommand = changed.getLauncher()
+                                    .getLaunchCommand(session, mc, null,
+                                            changed, new ILaunchSettings() {
+
+                                        @Override
+                                        public boolean isModifyAppletOptions() {
+                                            return false;
+                                        }
+
+                                        @Override
+                                        public File getJavaLocation() {
+                                            return null;
+                                        }
+
+                                        @Override
+                                        public List<String> getJavaArguments() {
+                                            return Arrays
+                                                    .asList("-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_ammar.exe_javaw.exe_minecraft.exe.heapdump",
+                                                            "-XX:+UseConcMarkSweepGC",
+                                                            "-XX:+CMSIncrementalMode",
+                                                            "-XX:-UseAdaptiveSizePolicy",
+                                                            "-Xmn128M");
+                                        }
+
+                                        @Override
+                                        public String getInitHeap() {
+                                            return "512M";
+                                        }
+
+                                        @Override
+                                        public String getHeap() {
+                                            return "1G";
+                                        }
+
+                                        @Override
+                                        public Map<String, String> getCustomParameters() {
+                                            return null;
+                                        }
+
+                                        @Override
+                                        public List<String> getCommandPrefix() {
+                                            return null;
+                                        }
+                                    }, null);
+                            launchCommand.stream().forEach((cmd) -> {
+                                System.out.print(cmd + " ");
+                            });
+                            System.out.println();
+                            ProcessBuilder pb = new ProcessBuilder(
+                                    launchCommand);
+                            pb.redirectError(new File("mcerr.log"));
+                            pb.redirectOutput(new File("mcout.log"));
+                            pb.directory(mc.getLocation());
+                            
+                        } catch (Exception e) {
+                            //e.printStackTrace();
+                        }
+
+                    }
+                }
+            });
+            versionList.startDownload();
+
+        } catch (Exception e) {
+            //  e.printStackTrace();
+        }
+    }
+
+    protected boolean isProcessAlive(Process proc) {
+        try {
+            System.out.println("Process exited with error code:"
+                    + proc.exitValue());
+            return false;
+        } catch (Exception e) {
+            return true;
+        }
+
+    }
+    
+    
+    
     public void MakeFile() {
         File workingDirectory = Platform.getCurrentPlatform().getWorkingDirectory();
         System.out.print(workingDirectory);
@@ -196,7 +335,7 @@ public class Download_FXMLDocumentController implements Initializable {
 
     }
 
-    public void test3() {
+    public void startzDownload() {
         final MCDownloadVersionList list = new MCDownloadVersionList();
         File workingDirectory = Platform.getCurrentPlatform().getWorkingDirectory();
         //final MinecraftInstance mc = new MinecraftInstance(new File("testmc"));
