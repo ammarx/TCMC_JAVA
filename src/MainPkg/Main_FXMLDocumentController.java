@@ -108,9 +108,33 @@ public class Main_FXMLDocumentController implements Initializable {
     @FXML
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
-        //txt.setText("HELLO");
-        launchminecraftyo();
+        String WhatDoesTheComboBoxHaz = (String) cmbox.getValue();
+        
+        //do bit of error handling here...
+        if (txt.getText().isEmpty()) {
+            //show errorbox
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("TagCraftMC API");
+            alert.setHeaderText("Username empty!");
+            alert.setContentText("Please fill in the username");
 
+            alert.showAndWait();
+            
+        } else if (WhatDoesTheComboBoxHaz == null){
+            //show errorbox
+            
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("TagCraftMC API");
+            alert.setHeaderText("Version empty!");
+            alert.setContentText("Please select version to launch");
+
+            alert.showAndWait();
+        } else {
+            
+            //txt.setText("HELLO");
+            launchminecraftyo();
+
+        }
     }
 
     public void RecreateFakeProfile() {
