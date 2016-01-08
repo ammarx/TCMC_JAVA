@@ -111,7 +111,7 @@ public class Download_FXMLDocumentController implements Initializable {
                 items.addAll(itemsX);
 
                 mylogs.setItems(items);
-
+                
             }
 
             @Override

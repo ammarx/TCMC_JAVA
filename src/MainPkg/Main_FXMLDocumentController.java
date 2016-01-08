@@ -547,7 +547,7 @@ public class Main_FXMLDocumentController implements Initializable {
         engine.load(urlx);
 
         make_server_resource_packs();
-        System.out.print("TEST");
+        //System.out.print("TEST");
         final MinecraftInstance mc = new MinecraftInstance(new File("testmc"));
 
         System.out.print(mc.getLocation().toString());

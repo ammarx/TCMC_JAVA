@@ -11,7 +11,7 @@
     <jar href="MCLauncher_Java.jar" size="26992" download="eager" />
     <jar href="lib/gson-2.5.jar" size="232482" download="eager" />
     <jar href="lib/json-smart-1.1.1.jar" size="51483" download="eager" />
-    <jar href="lib/mclauncher-api-0.3.1.jar" size="123765" download="eager" />
+    <jar href="lib/mclauncher-api-0.3.1.jar" size="123678" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="MCLauncher_Java" >
     <param name="requiredFXVersion" value="8.0+"/>
