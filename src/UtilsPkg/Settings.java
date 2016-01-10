@@ -5,10 +5,8 @@
  */
 package UtilsPkg;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
@@ -16,16 +14,44 @@ import java.util.Properties;
  *
  * @author ammar
  */
-public class Version {
+public class Settings {
     
-    private String versions = "a0803de";
+    private String selectedversion;
+    private String username;
+    private String version;
     
-    public String getversion() {
-        return versions;
+    public Settings() {
+        //user property to set settings to null.
+        
     }
     
-    public void setVersionNumberInConfig() {
-        //Insert Data to Config.
+    public String getselectedversion(){
+        return selectedversion;
+    }
+    
+    public String getusername(){
+        return username;
+    }
+    
+    public String getversion(){
+        return version;
+    }
+    
+    public void setselectedversion(String selectedversion){
+        this.selectedversion = selectedversion;
+    }
+
+    public void setusername(String username){
+        this.username = username;
+    }
+    
+    public void setversion(String version){
+        this.version = version;
+    }
+    
+    public void RebuildSettings(){
+        
+        
         Properties prop = new Properties();
         OutputStream output = null;
 
@@ -34,8 +60,10 @@ public class Version {
             output = new FileOutputStream("config.properties");
 
             // set the properties value
-            prop.setProperty("version", versions);
-
+            prop.setProperty("username", username);
+            prop.setProperty("selectedversion", selectedversion);
+            prop.setProperty("version", version);
+            
             // save properties to project root folder
             prop.store(output, null);
 
@@ -51,7 +79,6 @@ public class Version {
             }
 
         }
-
     }
     
 }

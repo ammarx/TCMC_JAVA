@@ -20,11 +20,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("Main_FXMLDocument.fxml"));
-
-        Scene scene = new Scene(root);
         Version version =  new Version();
-        stage.setTitle("Launcher - " + version.getVersionNumber());
+        version.setVersionNumberInConfig();
+       
+        Parent root = FXMLLoader.load(getClass().getResource("Main_FXMLDocument.fxml"));
+        Scene scene = new Scene(root);
+        stage.setTitle("Launcher - " + version.getversion());
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
