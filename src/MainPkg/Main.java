@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import UtilsPkg.Version;
 
 /**
  *
@@ -22,12 +23,12 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("Main_FXMLDocument.fxml"));
 
         Scene scene = new Scene(root);
-        stage.setTitle("Launcher - 4518659");
-
+        Version version =  new Version();
+        stage.setTitle("Launcher - " + version.getVersionNumber());
         stage.setScene(scene);
         stage.setResizable(false);
-
         stage.show();
+
     }
 
     /**
