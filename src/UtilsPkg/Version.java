@@ -24,34 +24,4 @@ public class Version {
         return versions;
     }
     
-    public void setVersionNumberInConfig() {
-        //Insert Data to Config.
-        Properties prop = new Properties();
-        OutputStream output = null;
-
-        try {
-
-            output = new FileOutputStream("config.properties");
-
-            // set the properties value
-            prop.setProperty("version", versions);
-
-            // save properties to project root folder
-            prop.store(output, null);
-
-        } catch (IOException io) {
-            io.printStackTrace();
-        } finally {
-            if (output != null) {
-                try {
-                    output.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-
-    }
-    
 }

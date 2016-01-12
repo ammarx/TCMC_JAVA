@@ -9,11 +9,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -37,14 +35,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import sk.tomsik68.mclauncher.api.common.ILaunchSettings;
 import sk.tomsik68.mclauncher.api.common.IObservable;
 import sk.tomsik68.mclauncher.api.common.IObserver;
@@ -56,6 +50,15 @@ import sk.tomsik68.mclauncher.impl.common.Platform;
 import sk.tomsik68.mclauncher.impl.login.yggdrasil.YDLoginService;
 import sk.tomsik68.mclauncher.impl.login.yggdrasil.YDProfileIO;
 import sk.tomsik68.mclauncher.impl.versions.mcdownload.MCDownloadVersionList;
+import UtilsPkg.Version;
+import UtilsPkg.Settings;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.net.HttpURLConnection;
+import java.net.UnknownHostException;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
 
 /**
  *
@@ -184,8 +187,8 @@ public class Main_FXMLDocumentController implements Initializable {
         }
     }
 
-    public void RunMineCraft() {
-
+    public void RunMineCraft_OLD() {
+        //method not used. Test method.
         try {
             // finally use my minecraft credentials
             System.out.println("Generating fake profile...");
@@ -305,13 +308,181 @@ public class Main_FXMLDocumentController implements Initializable {
                     }
                 }
             });
-            versionList.startDownload();
+            
+            if (isInternetReachable() == true){
+                
+                
+                 File workingDirectoryX = Platform.getCurrentPlatform().getWorkingDirectory();
+                 String myFile = workingDirectoryX.toString() + "/TagCraftMC_Files/versions.json";
 
+                 File fx = new File(myFile);
+                 downloadFileFromURL("http://s3.amazonaws.com/Minecraft.Download/versions/versions.json", fx);
+                 versionList.startDownload();
+ 
+                 //just download the list to system here..
+                
+            } else {
+                
+                versionList.startOfflineDownload();
+                //System.out.println("MainPkg.Main_FXMLDocumentController.RunMineCraft()");
+                //start offline download here...
+                
+            }
         } catch (Exception e) {
             //  e.printStackTrace();
         }
     }
+    
+    public void RunMineCraft(){
+        try {
+            
+            // finally use my minecraft credentials
+            System.out.println("Generating fake profile...");
+            RecreateFakeProfile();
+            System.out.println("Logging in...");
+            YDLoginService service = new YDLoginService();
+            service.load(Platform.getCurrentPlatform().getWorkingDirectory());
+            YDProfileIO profileIO = new YDProfileIO(Platform
+                    .getCurrentPlatform().getWorkingDirectory());
+            IProfile[] profiles = profileIO.read();
+        
+            final ISession session = service.login(profiles[0]);
+            session.setUsername(txt.getText());
+            session.setSessionID("NULL");
+            session.setUUID("NULL");
 
+            //profileIO.write(profiles);
+            System.out.println("Success! Launching...");
+             File workingDirectory = Platform.getCurrentPlatform().getWorkingDirectory();
+            System.out.print(workingDirectory);
+
+            //final MinecraftInstance mc = new MinecraftInstance(new File("testmc"));
+            final MinecraftInstance mc = new MinecraftInstance(new File(workingDirectory.toString()));
+
+            final MCDownloadVersionList versionList = new MCDownloadVersionList();
+            String idX = (String) cmbox.getValue();
+            IVersion changed = null;
+            try {
+                
+                //do editing here for offline mode..
+                changed = versionList.retrieveVersionInfo(idX);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                List<String> launchCommand = changed.getLauncher()
+                        .getLaunchCommand(session, mc, null,
+                                changed, new ILaunchSettings() {
+
+                                    @Override
+                                    public boolean isModifyAppletOptions() {
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public File getJavaLocation() {
+                                        return null;
+                                    }
+
+                                    @Override
+                                    public List<String> getJavaArguments() {
+                                        return Arrays
+                                                .asList("-XX:+UseConcMarkSweepGC",
+                                                        "-XX:+CMSIncrementalMode",
+                                                        "-XX:-UseAdaptiveSizePolicy",
+                                                        "-Xmn128M");
+                                    }
+
+                                    @Override
+                                    public String getInitHeap() {
+                                        return "512M";
+                                    }
+
+                                    @Override
+                                    public String getHeap() {
+                                        return "1G";
+                                    }
+
+                                    @Override
+                                    public Map<String, String> getCustomParameters() {
+                                        return null;
+                                    }
+
+                                    @Override
+                                    public List<String> getCommandPrefix() {
+                                        return null;
+                                    }
+                                }, null);
+                for (String cmd : launchCommand) {
+                    System.out.print(cmd + " ");
+                }
+                System.out.println();
+                ProcessBuilder pb = new ProcessBuilder(
+                        launchCommand);
+                pb.redirectError(new File("mcerr.log"));
+                pb.redirectOutput(new File("mcout.log"));
+                pb.directory(mc.getLocation());
+                Process proc = pb.start();
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(proc.getInputStream()));
+                String line;
+                while (isProcessAlive(proc)) {
+                    line = br.readLine();
+                    if (line != null && line.length() > 0)
+                        System.out.println(line);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void downloadFileFromURL(String urlString, File destination) {    
+        try {
+            URL website = new URL(urlString);
+            ReadableByteChannel rbc;
+            rbc = Channels.newChannel(website.openStream());
+            FileOutputStream fos = new FileOutputStream(destination);
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            fos.close();
+            rbc.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static boolean isInternetReachable()
+        {
+            try {
+                //make a URL to a known source
+                URL url = new URL("http://s3.amazonaws.com/");
+
+                //open a connection to that source
+                HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
+
+                //trying to retrieve data from the source. If there
+                //is no connection, this line will fail
+                Object objData = urlConnect.getContent();
+
+            } catch (UnknownHostException e) {
+                // TODO Auto-generated catch block
+                //e.printStackTrace();
+                return false;
+            }
+            catch (IOException e) {
+                // TODO Auto-generated catch block
+                //e.printStackTrace();
+                return false;
+            }
+        
+            return true;
+        }
+    
     protected boolean isProcessAlive(Process proc) {
         try {
             System.out.println("Process exited with error code:"
@@ -481,63 +652,16 @@ public class Main_FXMLDocumentController implements Initializable {
     }
 
     public void savesettings() {
-        Properties prop = new Properties();
-        OutputStream output = null;
-
-        try {
-
-            output = new FileOutputStream("config.properties");
-
-            // set the properties value
-            prop.setProperty("username", txt.getText());
-            prop.setProperty("selectedversion", (String) cmbox.getValue());
-
-            // save properties to project root folder
-            prop.store(output, null);
-
-        } catch (IOException io) {
-            io.printStackTrace();
-        } finally {
-            if (output != null) {
-                try {
-                    output.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
+        Settings settings = new Settings(txt.getText(), (String) cmbox.getValue());
+        settings.SaveSettings();
     }
 
     public void loadsettings() {
-
-        Properties prop = new Properties();
-        InputStream input = null;
-
-        try {
-
-            input = new FileInputStream("config.properties");
-
-            // load a properties file
-            prop.load(input);
-
-            // get the property value and print it out
-            //System.out.println(prop.getProperty("database"));
-            //System.out.println(prop.getProperty("dbuser"));
-            //System.out.println(prop.getProperty("dbpassword"));
-            txt.setText(prop.getProperty("username"));
-            cmbox.setValue(prop.getProperty("selectedversion"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        Settings settings = new Settings();
+        settings.LoadSettings();
+        txt.setText(settings.getusername());
+        cmbox.setValue(settings.getselectedversion());
+        
     }
 
     @Override

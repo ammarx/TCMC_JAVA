@@ -21,8 +21,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Version version =  new Version();
-        version.setVersionNumberInConfig();
-       
+        
         Parent root = FXMLLoader.load(getClass().getResource("Main_FXMLDocument.fxml"));
         Scene scene = new Scene(root);
         stage.setTitle("Launcher - " + version.getversion());
