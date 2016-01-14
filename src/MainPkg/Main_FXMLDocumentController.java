@@ -360,11 +360,13 @@ public class Main_FXMLDocumentController implements Initializable {
             final MinecraftInstance mc = new MinecraftInstance(new File(workingDirectory.toString()));
 
             final MCDownloadVersionList versionList = new MCDownloadVersionList();
+           
             String idX = (String) cmbox.getValue();
             IVersion changed = null;
             try {
                 
                 //do editing here for offline mode..
+                
                 changed = versionList.retrieveVersionInfo(idX);
             } catch (Exception e) {
                 e.printStackTrace();
