@@ -426,14 +426,20 @@ public class Main_FXMLDocumentController implements Initializable {
                 pb.redirectOutput(new File("mcout.log"));
                 pb.directory(mc.getLocation());
                 Process proc = pb.start();
-                BufferedReader br = new BufferedReader(
+                //do all that shit.. and then exit..
+                
+                System.exit(0);
+                
+                /*BufferedReader br = new BufferedReader(
                         new InputStreamReader(proc.getInputStream()));
                 String line;
                 while (isProcessAlive(proc)) {
                     line = br.readLine();
                     if (line != null && line.length() > 0)
                         System.out.println(line);
-                }
+                }*/
+                
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -442,6 +448,8 @@ public class Main_FXMLDocumentController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        
     }
 
     public static void downloadFileFromURL(String urlString, File destination) {    
